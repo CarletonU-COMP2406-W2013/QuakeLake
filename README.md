@@ -1,4 +1,3 @@
-
 ENDLESS BATTLES
 
 Description
@@ -15,12 +14,16 @@ Architecture and Database diagrams
 
 2nd week - due 15th:
 Game design - character actions and monsters
+Create database
 
 3rd week - due 1st:
 Framework demo
 
 4th week - due 8th:
 Content creation
+User's page
+Character's page
+Battle Field's page
 
 5th week - due 15th:
 Working prototype/demo

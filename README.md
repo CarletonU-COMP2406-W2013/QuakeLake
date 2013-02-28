@@ -7,6 +7,8 @@ One player will control a team of heroes and the other player will control a num
 
 The web server runs the game logic and the web clients would display the graphics and receive input from the players and send those inputs to the server. The backend store would store the different characters that are available to the players and the player accounts.
 
+Uses Node.js, connect, Express, and Socket.IO.
+
 Milestones
 
 1st week - due 8th :

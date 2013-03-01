@@ -1,5 +1,28 @@
 extends layout
 
 block content
-  h1 Web Fundamentals Project
-  p This will host a multiplayer game. Uses Express and Socket.IO.
+	#top
+		h1 Web Fundamentals Project - Login page
+		p This will host a multiplayer game. Uses Express and Socket.IO.
+
+		form(method='post', action='/login')
+			input(type='text', name='user')
+			br
+			input(type='password', name='password')
+			br
+			button(type='submit') Submit
+		p This is a test for sockets. You can use the chat below, with any chosen name
+		#messages
+			.yourname
+			p Username
+			input#name(name='name', type='text')
+		textarea#message
+		input#send(type='submit', value='Send message')
+	script(type='text/javascript')
+		$(document).ready(function() {
+			Chatting.initialize('http://localhost/');
+		});
+
+
+
+	

@@ -10,15 +10,7 @@ var express = require('express')
   , path = require('path');
   
 
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/mydb');
-
-var userSchema = new mongoose.Schema({
-	   username: String,
-	   password: String
-	 });
-
-var User = mongoose.model('User', userSchema);
+var MongoClient = require('mongodb').MongoClient;
 
 var app = express();
 
@@ -36,25 +28,23 @@ app.configure(function(){
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
+
 app.post('/login', function(request, response){
-  console.log(request.body.user);
-  console.log(request.body.password);
-  
-	 User.findOne({'username':request.body.user, 'password':request.body.password}, function (err, user) {
-	 	   if(err){
-	 	   	  console.log("doesnt work");
-	 	   	}else{
-	 	   		if(user != undefined){
-	 	   		  mongoose.connection.close();
-	        console.log(user.username);
-	     }else{
-   	     	console.log("user does not exist");
-	     	}
-	     	
-	   }
-	  });
-	  response.redirect('/index.html');
-	});
+  MongoClient.connect("mongodb://localhost:27017/mydb", function(err, db) {
+  if(!err) {
+    console.log("We are connected");
+    var collection = db.collection('users');
+    collection.findOne({username:request.body.user , password: request.body.password}, function(err, item){
+      if(item != undefined){
+        console.log("MAtch!");
+        response.redirect("/game.html");      	
+      	}else{
+         console.log("Error");
+         response.redirect("/index.html");      		
+      		}    	
+    	});
+  }
+});
 
 app.configure('development', function(){
   app.use(express.errorHandler());
@@ -63,6 +53,15 @@ app.configure('development', function(){
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-http.createServer(app).listen(app.get('port'), function(){
+var httpserver = http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
+});
+
+
+var io = require('socket.io').listen(httpserver);
+
+io.sockets.on('connection', function (socket) {
+	socket.on('msg', function(data) {
+		io.sockets.emit('new', data);
+	});
 });

@@ -64,6 +64,15 @@ app.configure('development', function(){
 app.get('/', routes.index);
 app.get('/users', user.list);
 
-http.createServer(app).listen(app.get('port'), function(){
+var httpserver = http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
+});
+
+
+var io = require('socket.io').listen(httpserver);
+
+io.sockets.on('connection', function (socket) {
+	socket.on('msg', function(data) {
+		io.sockets.emit('new', data);
+	});
 });

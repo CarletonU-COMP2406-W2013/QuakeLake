@@ -45,16 +45,15 @@ app.post('/login', function(request, response){
 	 	   	  console.log("doesnt work");
 	 	   	}else{
 	 	   		if(user != undefined){
+	 	   		  mongoose.connection.close();
 	        console.log(user.username);
-	        response.redirect('/game.html');
 	     }else{
    	     	console.log("user does not exist");
-   	     	mongoose.connection.close();
 	     	}
 	     	
 	   }
 	  });
-	  mongoose.connection.close();
+	  response.redirect('/index.html');
 	});
 
 app.configure('development', function(){

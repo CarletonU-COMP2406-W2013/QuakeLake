@@ -6,11 +6,14 @@
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
+  , game = require('./routes/game')
+  , signup = require('./routes/signup')
   , http = require('http')
   , path = require('path');
   
 
 var MongoClient = require('mongodb').MongoClient;
+
 
 var app = express();
 
@@ -23,6 +26,8 @@ app.configure(function(){
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
+  app.use(express.cookieParser());
+  app.use(express.session({ secret: 'keyboard cat'}));
   app.use(app.router);
   app.use(require('stylus').middleware(__dirname + '/public'));
   app.use(express.static(path.join(__dirname, 'public')));
@@ -32,26 +37,62 @@ app.configure(function(){
 app.post('/login', function(request, response){
   MongoClient.connect("mongodb://localhost:27017/mydb", function(err, db) {
   if(!err) {
-    console.log("We are connected");
+    console.log("We are connected ");
     var collection = db.collection('users');
-    collection.findOne({username:request.body.user , password: request.body.password}, function(err, item){
-      if(item != undefined){
+    collection.findOne({username:request.body.user, password:request.body.password}, function(err, item){
+    	  if(item != undefined){
         console.log("MAtch!");
-        response.redirect("/game.html");      	
+        response.redirect("/game");
+        request.session.username = request.body.user;      	
       	}else{
          console.log("Error");
          response.redirect("/index.html");      		
-      		}    	
+      	}    	
     	});
   }
 });
 });
 
+app.post('/newUser', function(request, response){
+  MongoClient.connect("mongodb://localhost:27017/mydb", function(err, db) {
+  if(!err) {
+  	  console.log("We are connected ");
+    var collection = db.collection('users');
+    collection.findOne({username:request.body.user, password: request.body.password}, function(err, item){
+      if(item != undefined){
+        console.log("User exists!");
+        response.redirect("/");
+              	
+      	}else{
+      		 
+         collection.insert({username:request.body.user, password: request.body.password}, function(err, item){
+         	 if(err){
+             console.log("signup error");         	 	
+         	 	}
+         	});
+         response.redirect("/");      		
+      	}    	
+    	});
+  }
+});
+});
+
+app.get('/signup', signup.render);
+
+app.get('/game', game.list);
+
 app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/', routes.index);
+app.get('/', function(req, res){
+    if(req.session.username){
+        res.redirect("/game");
+    }else{
+        routes.index(req, res);
+    }
+});
+
 app.get('/users', user.list);
 
 var httpserver = http.createServer(app).listen(app.get('port'), function(){

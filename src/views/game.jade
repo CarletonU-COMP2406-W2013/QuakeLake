@@ -1,20 +1,11 @@
 extends layout
 
 block content
-	#top
-		h1 Web Fundamentals Project - Game page
-		p This will host a multiplayer game. Uses Express and Socket.IO.
+	canvas#gameArea
 
-		p This is a test for sockets. You can use the chat below, with any chosen name
-		#messages
-			.yourname
-			p #{user}
-			input#name(name='name', type='text')
-		textarea#message
-		input#send(type='submit', value='Send message')
 	script(type='text/javascript')
-		$(document).ready(function() {
-			Chatting.initialize('http://localhost/');
-		});
-
-
+		init();
+		function run() {
+			window.setInterval(gameloop, 1000/60);
+		};
+		run();

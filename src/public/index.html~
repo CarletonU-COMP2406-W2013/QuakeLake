@@ -1,9 +1,0 @@
-<html>
-<header><title>Login</title></header>
-<body>
-  <form method='post' action='/login'>
-    <input type='text' name='user'>
-    <input type='password' name='password'>
-  </form>
-</body>
-</html>

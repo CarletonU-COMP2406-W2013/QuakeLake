@@ -2,13 +2,13 @@ extends layout
 
 block content
 	#top
-		h1 Web Fundamentals Project - Game page
-		p This will host a multiplayer game. Uses Express and Socket.IO.
+		h1 Web Fundamentals Project - Chat page
+		p Uses Express and Socket.IO.
 
-		p This is a test for sockets. You can use the chat below, with any chosen name
+		p You can use any name while chatting.
 		#messages
 			.yourname
-			p Username
+			p #{user}
 			input#name(name='name', type='text')
 		textarea#message
 		input#send(type='submit', value='Send message')

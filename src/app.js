@@ -6,8 +6,9 @@
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
-  , game = require('./routes/game')
+  , chat = require('./routes/chat')
   , signup = require('./routes/signup')
+	, game = require('./routes/game')
   , http = require('http')
   , path = require('path');
   
@@ -41,12 +42,12 @@ app.post('/login', function(request, response){
     var collection = db.collection('users');
     collection.findOne({username:request.body.user, password:request.body.password}, function(err, item){
     	  if(item != undefined){
-        console.log("MAtch!");
-        response.redirect("/game");
+        console.log("Match!");
+        response.redirect("/chat");
         request.session.username = request.body.user;      	
       	}else{
          console.log("Error");
-         response.redirect("/index.html");      		
+         response.redirect("/");      		
       	}    	
     	});
   }
@@ -79,7 +80,9 @@ app.post('/newUser', function(request, response){
 
 app.get('/signup', signup.render);
 
-app.get('/game', game.list);
+app.get('/game', game.render);
+
+app.get('/chat', chat.list);
 
 app.configure('development', function(){
   app.use(express.errorHandler());
@@ -87,7 +90,7 @@ app.configure('development', function(){
 
 app.get('/', function(req, res){
     if(req.session.username){
-        res.redirect("/game");
+        res.redirect("/chat");
     }else{
         routes.index(req, res);
     }

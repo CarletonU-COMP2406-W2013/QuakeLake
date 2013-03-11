@@ -1,9 +1,0 @@
-
-/*
- * GET sign-up page.
- */
-
-exports.list = function(req, res){
-	 	  res.render('signup.jade', { title: 'Sign up' });
-	 
-};

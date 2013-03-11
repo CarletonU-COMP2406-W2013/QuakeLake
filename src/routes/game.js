@@ -1,12 +1,9 @@
 
 /*
- * GET game page.
+ * GET game page
  */
 
-exports.list = function(req, res){
-	 if(req.session.username){
-	 	  res.render('game.jade', { title: 'Game' , user: req.session.username});
-	 }else{
-	 	  res.redirect('/');
-	 	}
+exports.render = function(req, res){
+	 	  res.render('game.jade', { title: 'Game' });
+	 
 };

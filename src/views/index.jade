@@ -2,8 +2,15 @@ extends layout
 
 block content
 	#top
-		h1 Web Fundamentals Project - Login page
-		p This will host a multiplayer game. Uses Express and Socket.IO.
+		h1 Web Fundamentals Project - Home page
+		p Uses Express and Socket.IO.
+		p Submit your login information below. 
+		p If you don't have an account, you can 
+			a(href='/signup') sign up
+			.
+		p You can also play as an anonymous player if you go to the   
+			a(href='/game', target ='blank_') game page
+			.
 
 		form(method='post', action='/login')
 			input(type='text', name='user')

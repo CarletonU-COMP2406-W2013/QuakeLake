@@ -1,0 +1,7 @@
+How to run the application:
+node app.js
+node serverGame.js
+
+Two node processes are running, one for the website and one for an instance of the game that accepts two players.
+
+When you login, you're redirected to a chat page.  

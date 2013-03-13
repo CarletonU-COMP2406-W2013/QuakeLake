@@ -1,0 +1,20 @@
+extends layout
+
+block content
+	#top
+		h1 Web Fundamentals Project - Chat page
+		p Uses Express and Socket.IO.
+
+		p You can use any name while chatting.
+		#messages
+			.yourname
+			p #{user}
+			input#name(name='name', type='text')
+		textarea#message
+		input#send(type='submit', value='Send message')
+	script(type='text/javascript')
+		$(document).ready(function() {
+			Chatting.initialize('http://localhost/');
+		});
+
+

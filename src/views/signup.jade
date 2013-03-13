@@ -1,0 +1,13 @@
+extends layout
+
+block content
+	#top
+		h1 Web Fundamentals Project - Sign up page
+		
+		form(method='post', action='/newUser')
+			input(type='text', name='user')
+			br
+			input(type='password', name='password')
+			br
+			button(type='submit') Submit
+		

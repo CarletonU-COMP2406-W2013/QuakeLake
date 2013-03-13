@@ -1,0 +1,11 @@
+extends layout
+
+block content
+	canvas#gameArea
+
+	script(type='text/javascript')
+		init();
+		function run() {
+			window.setInterval(gameloop, 1000/60);
+		};
+		run();

@@ -69,7 +69,7 @@ app.post('/newUser', function(request, response){
     collection.findOne({username:request.body.user, password: request.body.password}, function(err, item){
       if(item != undefined){
         console.log("User exists!");
-        response.redirect("/signup?error=User exists!");
+        response.redirect("/?error=User Created!");
               	
       	}else{
       		 var pw = request.body.password;
@@ -81,7 +81,7 @@ app.post('/newUser', function(request, response){
              console.log("signup error");         	 	
          	 	}
          	});
-          response.redirect("/signup?error=user already exists");  
+          response.redirect("/?error=user already exists");  
       	        
           });
 	        });

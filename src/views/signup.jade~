@@ -6,11 +6,11 @@ block content
   - if(error)
     div.alert-error #{error}
   form(method='post', action='/newUser')
-   p Username: 
+   Username: 
    br
    input(type='text', name='user')
    br
-   p Password:
+   Password:
    br
    input(type='password', name='password')
    br

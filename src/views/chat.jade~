@@ -17,6 +17,7 @@ block content
 		$(document).ready(function() {
 			Chatting.initialize('http://localhost/');
 		});
-
+		form(method='post', action='/logout')
+			button(type='submit') Logout
 
 

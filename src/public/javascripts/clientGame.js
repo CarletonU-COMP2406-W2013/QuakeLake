@@ -5,8 +5,10 @@ var characters = [];
 var terrain; 
 
 function init() {
+	ownId = 0;
+	
 	socket = io.connect("http://localhost", {port:4000});
-
+	
 	canvas = document.getElementById("gameArea");
 	context = canvas.getContext("2d");
 	
@@ -30,7 +32,9 @@ function init() {
 	
 	menuCharacters = [Blue(1100, 0), Cube(1220, 0), Flying(1100, 120), Goblin(1220, 120), Heavy(1100, 240), Archer(1100, 450), Healer(1220, 450), Mage(1100, 570), Warrior(1220, 570)];
 
-	playCharacters = []
+	playCharacters = [];
+	
+	enemyCharacters = [];
 
 	pastSelection = {x:0, y:0, selected: false, tile: null};
 	currentSelection = {x:0, y:0, selected: false, tile: null};
@@ -44,7 +48,7 @@ function init() {
 };
 
 var isClicked = function(tile) {
-	/* Checks if a particular tile is clicked */
+	// Checks if a particular tile is clicked
 	if (currentSelection.x > tile.x && currentSelection.x < tile.x+100 && currentSelection.y > tile.y && currentSelection.y < tile.y+100) {
 		currentSelection.x = tile.x+50;
 		currentSelection.y = tile.y+50;
@@ -81,25 +85,24 @@ var clickHandler = function(event) {
 	socket.emit("clicked", {x: currentSelection.x, y: currentSelection.y, selected: currentSelection.selected});  
 };
 
+var confirmTurn = function() {
+	if (startingPhase) {
+		socket.emit("new character", {type: pastSelection.tile.type, x: currentSelection.x-50, y: currentSelection.y-50});
+	} else {
+		pastSelection.tile.x = currentSelection.x-50;
+		pastSelection.tile.y = currentSelection.y-50;
+		
+		alert("Move confirmed, waiting for your opponent");
+	};
+};
+
 var keyHandler = function(event) {
 	var key = event.keyCode;
-	if (key === 13) {
-		if (startingPhase) {
-			playCharacters.push(pastSelection.tile.name(currentSelection.x-50, currentSelection.y-50));
-			budget += -pastSelection.tile.cost;
-		} else {
-			pastSelection.tile.x = currentSelection.x-50;
-			pastSelection.tile.y = currentSelection.y-50;
-			
-			alert("Move confirmed, waiting for your opponent");
-		};
-		
-		if (budget < 1 && startingPhase) {
-			startingPhase = false;
-			alert("Starting Phase completed.")
-		};		
+	if (key === 13) {		
+		confirmTurn();
 	};
 	if (key === 27) {
+		// Removes all selection
 		pastSelection = {x:0, y:0, selected: false, tile: null};
 		currentSelection = {x:0, y:0, selected: false, tile: null};
 	};
@@ -107,11 +110,28 @@ var keyHandler = function(event) {
 
 var setEventHandlers = function() {
 	socket.on("connect", onConnected);
+	socket.on("identification", setIdentification);
 	socket.on("disconnect", onDisconnected);
 	socket.on("clicked", onClick);
+	socket.on("new character", onNewCharacter);
+};
+
+function setIdentification(data) {
+	// The server communicates to the client its ID
+	ownId = data.id;
+}
+
+function onNewCharacter(data) {
+	// Creates a new character
+	playCharacters.push(baseCharacters[data.type](data.x, data.y, data.id));
+	playCharacters[playCharacters.length-1].owner = data.owner;
+	if (data.owner === ownId) {
+		budget += -playCharacters[playCharacters.length-1].cost;
+	}
 };
 
 function onClick(data) {
+	// Updates the opponent's cursor
 	enemySelection = data;
 };
 
@@ -174,6 +194,12 @@ function draw() {
 };
 
 function gameloop() {
+	
+	if (budget < 1 && startingPhase) {
+			startingPhase = false;
+			alert("Character choice completed.")
+	};	
+		
 	draw();
 };
 

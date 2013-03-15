@@ -11,7 +11,8 @@ block content
 		p You can also play as an anonymous player if you go to the   
 			a(href='/game', target ='blank_') game page
 			.
-
+		-		if(error)
+				div.alert-error #{error}
 		form(method='post', action='/login')
 			input(type='text', name='user')
 			br

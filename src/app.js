@@ -10,6 +10,7 @@ var express = require('express')
   , signup = require('./routes/signup')
 	, game = require('./routes/game')
   , http = require('http')
+, bcrypt = require('bcrypt')
   , path = require('path');
   
 
@@ -40,15 +41,21 @@ app.post('/login', function(request, response){
   if(!err) {
     console.log("We are connected ");
     var collection = db.collection('users');
-    collection.findOne({username:request.body.user, password:request.body.password}, function(err, item){
+    collection.findOne({username:request.body.user}, function(err, item){
     	  if(item != undefined){
+    	  	 bcrypt.compare(request.body.password, item.password, function(err, authenticated){
+			      if(authenticated){
+				       request.session.username = item.username;
+				       response.redirect("/chat");
+			      }else{
+				       response.redirect("/?error=invalid username or password");	
+			      }
+		      });
         console.log("Match!");
-        response.redirect("/chat");
-        request.session.username = request.body.user;      	
-      	}else{
-         console.log("Error");
-         response.redirect("/");      		
-      	}    	
+      }else{
+        console.log("Error");
+        response.redirect("/?error=invalid username or password");      		
+      }    	
     	});
   }
 });
@@ -59,25 +66,31 @@ app.post('/newUser', function(request, response){
   if(!err) {
   	  console.log("We are connected ");
     var collection = db.collection('users');
-    collection.findOne({username:request.body.user, password: request.body.password}, function(err, item){
+    collection.findOne({username:request.body.user}, function(err, item){
       if(item != undefined){
         console.log("User exists!");
-        response.redirect("/");
+        response.redirect("/signup?error=User already exists!");
               	
       	}else{
-      		 
-         collection.insert({username:request.body.user, password: request.body.password}, function(err, item){
+      		 var pw = request.body.password;
+      		 bcrypt.genSalt(10, function(err, salt) {
+		        //hash the given password using the salt we generated
+          bcrypt.hash(pw, salt, function(err, hash) {
+      	     collection.insert({username:request.body.user, password: hash}, function(err, item){
          	 if(err){
              console.log("signup error");         	 	
          	 	}
          	});
-         response.redirect("/");      		
+          response.redirect("/?error=User Created!");  
+      	        
+          });
+	        });
+             		
       	}    	
     	});
   }
 });
 });
-
 app.get('/signup', signup.render);
 
 app.get('/game', game.render);
@@ -94,6 +107,15 @@ app.get('/', function(req, res){
     }else{
         routes.index(req, res);
     }
+});
+
+app.post("/logout", function(req, res){
+	req.session.destroy(function(err){
+      if(err){
+          console.log("Error: %s", err);
+      }
+      res.redirect("/");
+  });	
 });
 
 app.get('/users', user.list);

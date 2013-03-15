@@ -9,12 +9,16 @@ block content
 		#messages
 			.yourname
 			p #{user}
-			input#name(name='name', type='text')
-		textarea#message
-		input#send(type='submit', value='Send message')
-	script(type='text/javascript')
-		$(document).ready(function() {
-			Chatting.initialize('http://localhost/');
-		});
-
+			div
+				input#name(name='name', type='text')
+				br
+				textarea#message
+				br
+				input#send(type='submit', value='Send message')
+				script(type='text/javascript')
+					$(document).ready(function() {
+						Chatting.initialize('http://localhost/');
+					});
+			form(method='post', action='/logout')
+				button(type='submit') Logout
 

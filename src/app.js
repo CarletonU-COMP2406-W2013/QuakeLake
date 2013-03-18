@@ -7,6 +7,7 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , chat = require('./routes/chat')
+  , leaderboard = require('./routes/leaderboard')
   , signup = require('./routes/signup')
 	, game = require('./routes/game')
   , http = require('http')
@@ -61,6 +62,18 @@ app.post('/login', function(request, response){
 });
 });
 
+app.get('/leaderboard', function(request, response){
+  MongoClient.connect("mongodb://localhost:27017/mydb", function(err, db) {
+  if(!err) {
+  	  console.log("We are connected ");
+    var collection = db.collection('users');
+    collection.find().sort([['numVitories', -1]]).toArray(function(err, items){
+      console.log(items[0].username);
+      leaderboard.leaderboard(request, response, items);    	
+    	});	
+	}
+})});
+
 app.post('/newUser', function(request, response){
   MongoClient.connect("mongodb://localhost:27017/mydb", function(err, db) {
   if(!err) {
@@ -73,10 +86,14 @@ app.post('/newUser', function(request, response){
               	
       	}else{
       		 var pw = request.body.password;
+      		 var pw2 = request.body.password2;
+      		 if(pw != pw2){
+      		   response.redirect("/signup?error=Passwords does not match");	
+      		 	}
       		 bcrypt.genSalt(10, function(err, salt) {
 		        //hash the given password using the salt we generated
           bcrypt.hash(pw, salt, function(err, hash) {
-      	     collection.insert({username:request.body.user, password: hash}, function(err, item){
+      	     collection.insert({username:request.body.user, password: hash, numVictories: 0}, function(err, item){
          	 if(err){
              console.log("signup error");         	 	
          	 	}

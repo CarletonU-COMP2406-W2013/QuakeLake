@@ -8,6 +8,7 @@ var express = require('express')
   , user = require('./routes/user')
   , chat = require('./routes/chat')
   , leaderboard = require('./routes/leaderboard')
+  , profile = require('./routes/profile')
   , signup = require('./routes/signup')
 	, game = require('./routes/game')
   , http = require('http')
@@ -21,6 +22,8 @@ var MongoClient = require('mongodb').MongoClient;
 var app = express();
 
 
+
+
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
@@ -31,6 +34,12 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({ secret: 'keyboard cat'}));
+  
+  app.use(function(req, res, next){
+    res.locals.session = req.session;
+    next();
+  });
+  
   app.use(app.router);
   app.use(require('stylus').middleware(__dirname + '/public'));
   app.use(express.static(path.join(__dirname, 'public')));
@@ -85,14 +94,16 @@ app.post('/newUser', function(request, response){
         response.redirect("/signup?error=User already exists!");
               	
       	}else{
-      		 var pw = request.body.password;
-      		 var pw2 = request.body.password2;
-      		 if(pw != pw2){
-      		   response.redirect("/signup?error=Passwords does not match");	
-      		 	}
-      		 bcrypt.genSalt(10, function(err, salt) {
-		        //hash the given password using the salt we generated
-          bcrypt.hash(pw, salt, function(err, hash) {
+      		 bcrypt.compare(request.body.oldPassword, item.password, function(err, authenticated){
+			      if(authenticated){
+				        var pw = request.body.newPassword;
+      		     var pw2 = request.body.newPassword2;
+      		     if(pw != pw2){
+      		       response.redirect("/editProfile?error=Passwords does not match");	
+      		 	    }
+      		 	    bcrypt.genSalt(10, function(err, salt) {
+		           //hash the given password using the salt we generated
+             bcrypt.hash(pw, salt, function(err, hash) {
       	     collection.insert({username:request.body.user, password: hash, numVictories: 0}, function(err, item){
          	 if(err){
              console.log("signup error");         	 	
@@ -102,17 +113,90 @@ app.post('/newUser', function(request, response){
       	        
           });
 	        });
+			      }else{
+				       response.redirect("/?error=invalid username or password");	
+			      }
+		      });
+      		
+      		 
              		
       	}    	
     	});
   }
 });
 });
+
+app.post('/newPassword', function(request, response){
+  MongoClient.connect("mongodb://localhost:27017/mydb", function(err, db) {
+  if(!err) {
+  	  console.log("We are connected ");
+    var collection = db.collection('users');
+    if(request.session.username){
+    collection.findOne({username:request.session.username}, function(err, item){
+      if(item == undefined){
+        //console.log("User exists!");
+        response.redirect("/?error=Something Terrible happened");
+              	
+      	}else{
+      		 bcrypt.compare(request.body.oldPassword, item.password, function(err, authenticated){
+			      if(authenticated){
+				        var pw = request.body.newPassword;
+      		     var pw2 = request.body.newPassword2;
+      		     if(pw != pw2){
+      		       response.redirect("/editProfile?error=Passwords does not match");	
+      		 	    }
+      		 	    bcrypt.genSalt(10, function(err, salt) {
+		            //hash the given password using the salt we generated
+              bcrypt.hash(pw, salt, function(err, hash) {
+      	        collection.update({username:request.session.username}, {$set : {password: hash}}, function(err, item){
+         	      if(err){
+                 response.redirect("/editProfile?error=Something Terrible happened");         	 	
+         	 	     }
+         	     });
+               response.redirect("/editProfile?error=Password Update");  
+      	       });
+	           });
+      	  }else{
+		          response.redirect("/editProfile?error=Invalid Old Password");      	  	
+      	  	}    	
+    	   });
+      }
+     });
+    }else{
+      response.redirect("/?error=Please Log in");    	
+    	}
+    }
+  });
+}	);
+
+app.get('/user', function(req, res){
+	MongoClient.connect("mongodb://localhost:27017/mydb", function(err, db) {
+		if(!err) {
+   console.log("We are connected ");
+   var collection = db.collection('users');
+   collection.findOne({username:req.query.username}, function(err, item){
+    if(item != undefined){
+    	 profile.showProfile(req, res, item);
+				}else{
+				 response.redirect("/404");	
+			 }
+		 });
+  }else{
+   console.log("Error");
+   response.redirect("/?error=Connection Error");      		
+  }    	
+ });
+});	
+
+
+
 app.get('/signup', signup.render);
 
 app.get('/game', game.render);
 
 app.get('/chat', chat.list);
+
+app.get('/editProfile', profile.editProfile);
 
 app.configure('development', function(){
   app.use(express.errorHandler());

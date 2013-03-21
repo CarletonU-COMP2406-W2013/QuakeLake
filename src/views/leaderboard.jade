@@ -10,7 +10,8 @@ block content
 				td		"Number of Victories"
 			each num, user in users
 				tr
-					td #{num.username}
+					td 
+						a(href='/user?username=#{num.username}') #{num.username}
 					td #{num.numVictories}
 		
 

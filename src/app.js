@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -94,34 +93,28 @@ app.post('/newUser', function(request, response){
         response.redirect("/signup?error=User already exists!");
               	
       	}else{
-      		 bcrypt.compare(request.body.oldPassword, item.password, function(err, authenticated){
-			      if(authenticated){
-				        var pw = request.body.newPassword;
-      		     var pw2 = request.body.newPassword2;
-      		     if(pw != pw2){
-      		       response.redirect("/editProfile?error=Passwords does not match");	
-      		 	    }
-      		 	    bcrypt.genSalt(10, function(err, salt) {
-		           //hash the given password using the salt we generated
-             bcrypt.hash(pw, salt, function(err, hash) {
-      	     collection.insert({username:request.body.user, password: hash, numVictories: 0}, function(err, item){
-         	 if(err){
-             console.log("signup error");         	 	
-         	 	}
-         	});
-          response.redirect("/?error=User Created!");  
+      		var pw = request.body.password;
+      		var pw2 = request.body.password2;
+      		if(pw != pw2){
+      			response.redirect("/signup?error=Passwords does not match");	
+      		}
+      		bcrypt.genSalt(10, function(err, salt) {
+			//hash the given password using the salt we generated
+             		bcrypt.hash(pw, salt, function(err, hash) {
+      	     			collection.insert({username:request.body.user, password: hash, numVictories: 0}, function(err, item){
+         	 			if(err){
+             					console.log("signup error");         	 	
+         	 			}
+         			});
+          			response.redirect("/?error=User Created!");  
       	        
-          });
+          		});
 	        });
-			      }else{
-				       response.redirect("/?error=invalid username or password");	
-			      }
-		      });
+	});
       		
       		 
              		
-      	}    	
-    	});
+    });
   }
 });
 });

@@ -110,7 +110,7 @@ app.post('/newUser', function(request, response){
       	        
           		});
 	        });
-	});
+	};
       		
       		 
              		

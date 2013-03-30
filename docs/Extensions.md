@@ -8,4 +8,9 @@ that does not have enough time to play a entire game.
 
 - Add Social Network features
 
-Add Friends to your profile, create a leaderboard between your friends. It could be implement by adding more information to the database and change a few things in how the profile are show.
+Add Friends to your profile, create a leaderboard between your friends. It could be implemented by adding more information to the database and change a few things in how the profile are show.
+
+- Create a window for room selection
+
+For the moment, only a Quick Start option is available, where a user will automatically join a game if he goes on the Game page and a game is waiting for players. Offering the player to create a game and make it private for a friend, and to see a list of available games, would simplify the way friends can play a game together.
+The current design stores the game based on the players and therefore offers a way to check easily where specific players are, so implementing this functionality would consist of producing a window (displayed on the HTML5 canvas) when you go on the game page, where the games are displayed with the name of the users in them, such that a second user can be added to the desired game.  

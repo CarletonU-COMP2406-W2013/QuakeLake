@@ -105,9 +105,9 @@ Template for the Profile page
 views\signup.jade
 Template for the Sign Up page
 
-app.js
-It is the main core of the application. It is use to handle posts and gets.
-This file also is responsable to connect only two users to a game.
+app.js: 
+It is the core of the application. It is used to handle posts and gets.
+This file also handles the Socket.IO connections used to update the state of the games running on the server (from player input) and the graphics seen by the players.
 
 package.json
 It lists the project dependencies and some metadata for npm

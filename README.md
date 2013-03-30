@@ -3,9 +3,7 @@ ENDLESS BATTLES
 by QuakeLake
 
 Rafael Guerra - student number
-
 and
-
 Sébastien Ouellet - 100836987
 
 Description

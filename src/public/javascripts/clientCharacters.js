@@ -4,16 +4,8 @@ var Character = function(startingX, startingY, id) {
 	// Base object for all characters
 	var x = startingX;
 	var y = startingY;
-	var health = 40;
 	var id = id;
 	var image = new Image();
-	
-	var attack = function(target) {
-	};
-	
-	var setHealth = function(newHealth) {
-		health = newHealth;
-	};
 	
 	var isSelected = function() {
 	};
@@ -21,12 +13,8 @@ var Character = function(startingX, startingY, id) {
 	return {
 		x: x,
 		y: y,
-		health: health,
 		id: id,
-		cost: 10,
 		image: image,
-		attack: attack,
-		setHealth: setHealth,
 		isSelected: isSelected
 	};
 }; 

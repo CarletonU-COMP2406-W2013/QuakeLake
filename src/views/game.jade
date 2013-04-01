@@ -1,11 +1,14 @@
 extends layout
 
 block content
+	p #{user}.
+	p
+	p Press Escape to remove your selection. The first player chooses his units from the 4 bottom characters, and the second player from the 5 monsters. 
 	canvas#gameArea(tabindex='1')
 
 	script(type='text/javascript')
 		init();
 		function run() {
-			window.setInterval(gameloop, 1000/60);
+			window.setInterval(gameloop, 1000/15);
 		};
 		run();

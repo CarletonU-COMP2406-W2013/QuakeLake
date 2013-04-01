@@ -6,8 +6,6 @@ Rafael Guerra - student number
 and
 Sébastien Ouellet - 100836987
 
-Description
-
 Tactical turn-based multiplayer game that would look like how the combat plays out in Chess, if pieces had health and special abilities.
 One player will control a team of heroes and the other player will control a number of monsters that the first player must defeat. The players move their characters on a grid, and each character have a number of actions available per turn, such as a move action or an attack action. Initially, players decide where to put their characters on the grid, based on a budget, as there is a cost associated with each of the characters.
 

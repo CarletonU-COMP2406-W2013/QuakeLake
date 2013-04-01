@@ -1,0 +1,10 @@
+extends layout
+
+block content
+	#top
+		h1 #{username.username}
+		
+		h3 Number of Victories: #{username.numVictories}
+		
+		- if(username.username == session.username)
+				a(href= '/editProfile') Change you password

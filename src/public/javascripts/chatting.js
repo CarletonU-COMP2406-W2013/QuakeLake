@@ -9,11 +9,11 @@
 				Chatting.send();
 			});
 
-			this.socket.on('new', this.add);
+			this.socket.on('newMessage', this.add);
 		},
 
 		add : function(data) {
-			if (data.name !== undefined) {			
+			if (data.name !== "") {			
 				var name = data.name;
 			} else {
 				var name = 'Anonymous Coward';
@@ -25,7 +25,7 @@
 		},
 
 		send : function() {
-			this.socket.emit('msg', {
+			this.socket.emit('message', {
 				name: $('#name').val(),
 				msg : $('#message').val()
 			});		

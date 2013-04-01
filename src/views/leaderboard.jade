@@ -1,0 +1,18 @@
+extends layout
+
+block content
+	#top
+		h1 Leaderboard
+		
+		table
+			tr
+				td		User
+				td		"Number of Victories"
+			each num, user in users
+				tr
+					td 
+						a(href='/user?username=#{num.username}') #{num.username}
+					td #{num.numVictories}
+		
+
+	

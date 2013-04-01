@@ -5,9 +5,11 @@ var characters = [];
 var terrain; 
 
 function init() {
+	first = false;
+
 	ownId = 0;
 	
-	socket = io.connect("http://localhost", {port:4000});
+	gameNumber = 0;
 	
 	canvas = document.getElementById("gameArea");
 	context = canvas.getContext("2d");
@@ -36,15 +38,20 @@ function init() {
 	
 	enemyCharacters = [];
 
+	budget = 30;
+	
+	startingPhase = true;
+
 	pastSelection = {x:0, y:0, selected: false, tile: null};
 	currentSelection = {x:0, y:0, selected: false, tile: null};
 	
 	enemySelection = {x:0, y:0, selected: false, tile: null};
 
-	budget = 40;
-	startingPhase = true;
+	socket = io.connect("http://localhost", {port:3000});
 
-	setEventHandlers();	
+	setEventHandlers();
+	
+	socket.emit("identifyMe");	
 };
 
 var isClicked = function(tile) {
@@ -68,7 +75,12 @@ var clickHandler = function(event) {
 	currentSelection.selected = false;
 	currentSelection.tile = null;
 	
-	tiles = playCharacters.concat(menuCharacters).concat(terrains);
+	if (startingPhase) {
+		tiles = playCharacters.concat(menuCharacters).concat(terrains);
+	} else {
+		tiles = playCharacters.concat(terrains);
+	};
+	
 	
 	emptyness = true;
 	for (var i = 0; i < tiles.length; i++) {
@@ -82,18 +94,30 @@ var clickHandler = function(event) {
 		currentSelection.selected = false;
 	}
 	
-	socket.emit("clicked", {x: currentSelection.x, y: currentSelection.y, selected: currentSelection.selected});  
+	if (pastSelection.selected === true && currentSelection.selected === true) {
+		socket.emit("play turn", {pastx: pastSelection.x-50, pasty: pastSelection.y-50, x: currentSelection.x-50, y: currentSelection.y-50});
+		
+		currentSelection.tile = null;
+		currentSelection.tile = null;		
+		currentSelection.selected = false;
+		pastSelection.selected = false;
+		
+	};
+	//socket.emit("clicked", {x: currentSelection.x, y: currentSelection.y, selected: currentSelection.selected});  
 };
 
 var confirmTurn = function() {
-	if (startingPhase) {
-		socket.emit("new character", {type: pastSelection.tile.type, x: currentSelection.x-50, y: currentSelection.y-50});
+	/*if (startingPhase) {
+		socket.emit("new character", {type: pastSelection.tile.type, x: currentSelection.x-50, y: currentSelection.y-50, gameNumber: gameNumber});
 	} else {
+		
 		pastSelection.tile.x = currentSelection.x-50;
 		pastSelection.tile.y = currentSelection.y-50;
 		
 		alert("Move confirmed, waiting for your opponent");
+		
 	};
+	*/
 };
 
 var keyHandler = function(event) {
@@ -113,21 +137,36 @@ var setEventHandlers = function() {
 	socket.on("identification", setIdentification);
 	socket.on("disconnect", onDisconnected);
 	socket.on("clicked", onClick);
-	socket.on("new character", onNewCharacter);
+	socket.on("updateCharacters", updateCharacters);
+	socket.on("update budget", updateBudget);
+	socket.on("alert", messageFromServer);
+};
+
+function messageFromServer(data) {
+	alert(data.fromServer);
+};
+
+function updateBudget(data) {
+	budget = data.budget;
+	startingPhase = data.startingPhase;
 };
 
 function setIdentification(data) {
-	// The server communicates to the client its ID
+	// The server tells the client its ID
 	ownId = data.id;
-}
+	gameNumber = data.gameNumber;
+	first = data.first;
+	
+	socket.emit("giveCharacters", {});
+};
 
-function onNewCharacter(data) {
-	// Creates a new character
-	playCharacters.push(baseCharacters[data.type](data.x, data.y, data.id));
-	playCharacters[playCharacters.length-1].owner = data.owner;
-	if (data.owner === ownId) {
-		budget += -playCharacters[playCharacters.length-1].cost;
-	}
+function updateCharacters(data) {
+	// Updates the list of characters
+	playCharacters = [];
+	for (var i = 0; i < data.length; i++) {
+		playCharacters.push(baseCharacters[data[i].type](data[i].x, data[i].y, data[i].id));
+		playCharacters[playCharacters.length-1].owner = data[i].owner;	
+	};
 };
 
 function onClick(data) {
@@ -159,15 +198,20 @@ function drawCharacters(characters) {
 function drawPastSelection() {
 	if (pastSelection.selected) {
 		context.lineWidth = 5;
-		context.strokeStyle = "#2E9AFE";
+		context.strokeStyle = "#03C817";
 		context.strokeRect(pastSelection.x-50, pastSelection.y-50, 100, 100);
 	};
 };
 
 function drawSelection() {
 	if (currentSelection.selected) {
+		context.strokeStyle = "#2E9AFE";
+		if ((currentSelection.tile.type < 5 && first) || (currentSelection.tile.type > 4 && !first)) {
+			context.strokeStyle = "#A31B00";	
+		};
+				
 		context.lineWidth = 5;
-		context.strokeStyle = "#03C817";
+		
 		context.strokeRect(currentSelection.x-50, currentSelection.y-50, 100, 100);
 	};
 };
@@ -187,19 +231,14 @@ function draw() {
 	drawCharacters(menuCharacters);
 	drawCharacters(playCharacters);
 	
-	drawEnemySelection();
+	//drawEnemySelection();
 	drawPastSelection();
 	drawSelection();
 	
 };
 
-function gameloop() {
+function gameloop() {	
 	
-	if (budget < 1 && startingPhase) {
-			startingPhase = false;
-			alert("Character choice completed.")
-	};	
-		
 	draw();
 };
 

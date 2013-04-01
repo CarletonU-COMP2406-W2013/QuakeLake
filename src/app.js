@@ -24,6 +24,8 @@ var MongoClient = require('mongodb').MongoClient;
 
 var app = express();
 
+
+
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');

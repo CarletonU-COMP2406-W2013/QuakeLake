@@ -4,24 +4,28 @@ var Character = function(startingX, startingY, id) {
 	var x = startingX;
 	var y = startingY;
 	var id = id;
+	var initialhealth = 40;
 	var health = 40;
 	var damage = 10;
 	var cost = 10;
 	var speed = 200;
+	var range = 150;
+	
+	var alpha = function() {
+		return health/initialhealth;
+	}
 	
 	var isAttacked = function(ouch) {
 		health -= ouch;
 	};
 	
 	var attack = function(target) {
-		target.isAttacked(damage);
-	};
-	
-	var setHealth = function(newHealth) {
-		health = newHealth;
-	};
-	
-	var isSelected = function() {
+		if (distance(target) < range) {
+			target.isAttacked(damage);
+			return true;	
+		} else {
+			return false;
+		};
 	};
 	
 	var getX = function() {
@@ -40,12 +44,20 @@ var Character = function(startingX, startingY, id) {
 		y = newY;
 	};
 	
+	var setHealth = function(newHealth) {
+		health = newHealth;
+	};
+	
 	var getHealth = function() {
 		return health;
 	};
 	
+	var distance = function(tile) {
+		return Math.sqrt(Math.pow(tile.x()-x,2)+Math.pow(tile.y()-y,2));
+	};
+	
 	var move = function(tile) {
-		if (Math.sqrt(Math.pow(tile.x()-x,2)+Math.pow(tile.y()-y,2)) <= speed) {
+		if (distance(tile) <= speed) {
 			x = tile.x();
 			y = tile.y();
 			return true;
@@ -58,7 +70,7 @@ var Character = function(startingX, startingY, id) {
 		if (tile.type === 9) {
 			return move(tile);
 		} else {
-			return false;
+			return attack(tile);
 		}
 	};
 	
@@ -70,6 +82,39 @@ var Character = function(startingX, startingY, id) {
 		return speed;
 	};
 	
+	var setCost = function(newCost) {
+		cost = newCost;
+	};
+	
+	var getCost = function() {
+		return cost;
+	};
+	
+	var setAttack = function(newAttack) {
+		attack = newAttack;
+	};
+	
+	var getAttack = function() {
+		return attack;
+	};
+	
+	var setRange = function(newRange) {
+		range = newRange;
+	};
+	
+	var getRange = function() {
+		return range;
+	};
+	
+	var setDamage = function(newDamage) {
+		damage = newDamage;
+	};
+	
+	var getDamage = function() {
+		return damage;
+	};
+	
+	
 	return {
 		x: getX,
 		y: getY,
@@ -77,19 +122,28 @@ var Character = function(startingX, startingY, id) {
 		setY: setY,
 		health: getHealth,
 		id: id,
-		cost: cost,
-		attack: attack,
+		cost: getCost,
+		setCost: setCost,
+		attack: getAttack,
+		setAttack: setAttack,
 		isAttacked: isAttacked,
 		setHealth: setHealth,
-		isSelected: isSelected,
 		action: action,
 		getSpeed: getSpeed,
-		setSpeed: setSpeed
+		setSpeed: setSpeed,
+		alpha: alpha,
+		range: getRange,
+		setRange: setRange,
+		distance: distance,
+		damage: getDamage,
+		setDamage: setDamage
+		
 	};
 }; 
 var Archer = function(startingX, startingY, id) {
 	var self = Character(startingX, startingY, id);
 	self.type = 5;
+	self.setRange(450);
 	return self;	
 };
 
@@ -117,6 +171,22 @@ var Goblin = function(startingX, startingY, id) {
 var Healer = function(startingX, startingY, id) {
 	var self = Character(startingX, startingY, id);
 	self.type = 6;
+	self.heal = 5;
+	
+	self.setAttack(function(target) {
+		if (target.type > 4) {
+			target.setHealth(target.health()+self.heal);
+			return true;
+		} else {
+			if (self.distance(target) < self.range()) {
+				target.isAttacked(self.damage());
+				return true;	
+			} else {
+				return false;
+			};
+		};
+	});
+	
 	return self;	
 };
 var Heavy = function(startingX, startingY, id) {

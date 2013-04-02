@@ -340,9 +340,28 @@ function playTurn(data) {
 		}
 	};
 	
-	currentGame.advanceGame();
+	var won = currentGame.advanceGame();
 	
 	charactersForClient(data, this.id);
+	
+	if (won !== -1) {
+		if (won === 0) {
+			for(var i = 0; i < currentGame.players.length; i++) {
+				currentGame.players[i].emit("alert", {fromServer: "The first player has won the game! Huzzah!"});
+			};
+		} else if (won === 1) {
+			for(var i = 0; i < currentGame.players.length; i++) {
+				currentGame.players[i].emit("alert", {fromServer: "The second player has won the game! Yay!"});
+			};
+		};
+		var winner = currentGame.players[won] //to do: retrieve username too
+		
+		delete games[gameByPlayers[this.id].toString()];
+		delete gameByPlayers[currentGame.players[0].id];
+		delete gameByPlayers[currentGame.players[1].id];
+		currentGame.players[0].disconnect();
+		currentGame.players[1].disconnect();
+	};
 };
 
 function onClick(data) {

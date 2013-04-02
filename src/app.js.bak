@@ -283,7 +283,7 @@ function charactersForClient(data, clientID) {
 	for (var i = 0; i < currentGame.playCharacters.length; i++) {
 		for (var j = 0; j < currentGame.playCharacters[i].length; j++) {	
 			var currentCharacter = currentGame.playCharacters[i][j];
-			characters.push({type: currentCharacter.type, x: currentCharacter.x(), y: currentCharacter.y(), id: currentCharacter.id, owner: currentCharacter.owner, alpha: currentCharacter.alpha()});
+			characters.push({type: currentCharacter.type, x: currentCharacter.x(), y: currentCharacter.y(), id: currentCharacter.id, owner: currentCharacter.owner});
 		};
 	};
 	
@@ -294,7 +294,7 @@ function charactersForClient(data, clientID) {
 
 function onNewCharacter(currentGame, currentPlayer, data, clientID, selection) {
 	
-	if (currentGame.checkBudget(baseCharacters[selection.pastTile.type]().cost())) {
+	if (currentGame.checkBudget(baseCharacters[selection.pastTile.type]().cost)) {
 		// Character too expensive
 		return;
 	};

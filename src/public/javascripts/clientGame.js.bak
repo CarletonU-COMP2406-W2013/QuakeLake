@@ -228,11 +228,11 @@ function drawEnemySelection() {
 
 function draw() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	context.globalAlpha = 1.0
+	
 	drawGrass();
 	drawCharacters(menuCharacters);
 	drawCharacters(playCharacters);
-	context.globalAlpha = 1.0
+	
 	//drawEnemySelection();
 	drawPastSelection();
 	drawSelection();

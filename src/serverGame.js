@@ -87,7 +87,7 @@ var Game = function(gameNumber) {
 	var updateBudget = function() {
 		budgets[turn%2] = initialbudget;
 		for(var i = 0; i < playCharacters[turn%2].length; i++){
-			budgets[turn%2] -= playCharacters[turn%2][i].cost;
+			budgets[turn%2] -= playCharacters[turn%2][i].cost();
 		};
 		if (budgets[0]+budgets[1] === 0) {
 			for (var i = 0; i < players.length; i++) {

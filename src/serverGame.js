@@ -9,6 +9,7 @@ var Game = function(gameNumber) {
 	var startingPhase = true;
 	var terrains = [];
 	var menuCharacters = [];
+	var won = -1;
 	
 	var terrain = function(x,y) {
 		var x = x;
@@ -100,8 +101,38 @@ var Game = function(gameNumber) {
 		players[turn%2].emit("update budget", {budget: budgets[turn%2], startingPhase: startingPhase});
 	};
 	
+	var removeDead = function() {
+		for(var i = 0; i < playCharacters.length; i++) {
+			var dead = [];
+			for(var j = 0; j < playCharacters[i].length; j++) {
+				if (playCharacters[i][j].health() < 1) {
+					dead.push(j);
+				};
+			};
+			for(var j = 0; j < dead.length; j++) {
+				var index = dead[j]-j;
+				playCharacters[i].splice(index,1);
+			};
+		};
+	};
+	
+	var checkVictory = function() {
+		if (playCharacters[0].length === 0) {
+			won = 1;
+		} else if (playCharacters[1].length === 0) {
+			won = 0;
+		};
+	};
+	
 	var advanceGame = function() {
+		removeDead();		
+		
 		turn += 1;
+		
+		if (!startingPhase) {
+			checkVictory();
+		}
+		return won;
 	};
 	
 	var checkBudget = function(cost) {

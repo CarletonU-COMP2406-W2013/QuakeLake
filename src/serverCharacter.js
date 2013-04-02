@@ -112,8 +112,7 @@ var Character = function(startingX, startingY, id) {
 	
 	var getDamage = function() {
 		return damage;
-	};
-	
+	};	
 	
 	return {
 		x: getX,

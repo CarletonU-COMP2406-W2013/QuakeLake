@@ -6,22 +6,23 @@ var Character = function(startingX, startingY, id) {
 	var y = startingY;
 	var id = id;
 	var image = new Image();
-	
-	var isSelected = function() {
-	};
+	var range = 150;
+	var speed = 200;
 	
 	return {
 		x: x,
 		y: y,
 		id: id,
 		image: image,
-		isSelected: isSelected
+		range: range,
+		speed: speed
 	};
 }; 
 var Archer = function(startingX, startingY, id) {
 	var self = Character(startingX, startingY, id);
 	self.image.src = "/graphics/archer.png";
 	self.type = 5;
+	self.range = 350;
 	return self;	
 };
 
@@ -41,12 +42,14 @@ var Flying = function(startingX, startingY, id) {
 	var self = Character(startingX, startingY, id);
 	self.image.src = "/graphics/flying.png";
 	self.type = 2;
+	self.range = 250;
 	return self;	
 };
 var Goblin = function(startingX, startingY, id) {
 	var self = Character(startingX, startingY, id);
 	self.image.src = "/graphics/goblin.png";
 	self.type = 3;
+	self.speed = 300;
 	return self;	
 };
 var Healer = function(startingX, startingY, id) {
@@ -65,6 +68,8 @@ var Mage = function(startingX, startingY, id) {
 	var self = Character(startingX, startingY, id);
 	self.image.src = "/graphics/mage.png";
 	self.type = 7;
+	self.range = 500;
+	self.speed = 500;
 	return self;	
 };
 var Warrior = function(startingX, startingY, id) {

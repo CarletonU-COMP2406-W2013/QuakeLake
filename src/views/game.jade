@@ -3,7 +3,12 @@ extends layout
 block content
 	p #{user}.
 	p
-	p Press Escape to remove your selection. The first player chooses his units from the 4 bottom characters, and the second player from the 5 monsters. 
+	p The first player chooses his units from the 4 bottom characters, and the second player from the 5 monsters. Click one and choose a position on the battlefield. This is done in turns, and you can choose 3 of them. 
+	p You have a budget of 30 points for characters. Every one of them costs 10 points, except the bat-like monster and the green one, which cost 5, and the one-armed, one-eyed monster, which costs 15. For more information, consult the 
+		a(href='/gamemanual') game manual
+		.
+	p Press Escape to cancel your selection.
+	p The colored squares represent your attack range, while the green highlights represent your movement range. You have two such actions per turn.
 	canvas#gameArea(tabindex='1')
 
 	script(type='text/javascript')

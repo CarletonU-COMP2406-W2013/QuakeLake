@@ -367,14 +367,22 @@ function playTurn(data) {
 	} else {
 		//this.emit("alert", {fromServer: "wait, still not done yet"});
 		//this.emit("alert", {fromServer: "You're attacking a guy of type "+selection.nextTile.type+" at "+selection.nextTile.x()+" "+selection.nextTile.y()});
+<<<<<<< HEAD
 		if (!selection.pastTile.action(selection.nextTile,possiblyHurt)) {sendIdentification
+=======
+		if (!selection.pastTile.action(selection.nextTile)) {sendIdentification
+>>>>>>> upstream/master
 			this.emit("alert", {fromServer: "Invalid move! Sorry about that. Just do something else."});
 			return;
 		}
 	};
+	
 	var won = currentGame.advanceGame();
-
+	
+<<<<<<< HEAD
 	// Update the clients with character data
+=======
+>>>>>>> upstream/master
 	charactersForClient(data, this.id); 
 	
 	if (won !== -1) {
@@ -400,7 +408,10 @@ function playTurn(data) {
 	};
 };
 
+<<<<<<< HEAD
 // If the winner is an anonymous player, no changes are made and an ERROR is shown in the server console 
+=======
+>>>>>>> upstream/master
 function updateVictory(player){
  MongoClient.connect("mongodb://localhost:27017/mydb", function(err, db) {
 		if(!err) {

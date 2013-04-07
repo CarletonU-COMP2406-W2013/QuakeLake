@@ -196,7 +196,7 @@ function drawCharacters(characters) {
 		context.drawImage(characters[i].image, characters[i].x, characters[i].y);
 	};
 };
-
+/* Not used anymore
 function drawPastSelection() {
 	if (pastSelection.selected) {
 		context.lineWidth = 5;
@@ -204,7 +204,7 @@ function drawPastSelection() {
 		context.strokeRect(pastSelection.x-50, pastSelection.y-50, 100, 100);
 	};
 };
-
+*/
 function drawSelection() {
 	if (currentSelection.selected) {
 		context.strokeStyle = "#2E9AFE";
@@ -217,7 +217,7 @@ function drawSelection() {
 		context.strokeRect(currentSelection.x-50, currentSelection.y-50, 100, 100);
 	};
 };
-
+/* Not used anymore to avoid confusion
 function drawEnemySelection() {
 	if (enemySelection.selected) {
 		context.lineWidth = 5;
@@ -225,17 +225,64 @@ function drawEnemySelection() {
 		context.strokeRect(enemySelection.x-50, enemySelection.y-50, 100, 100);
 	};
 }
+*/
+function findTerrains(x,y,distance) {
+	var terrainsFound = [];
+	for(var i = 0; i < terrains.length; i++) {
+		var current = terrains[i];
+		if (Math.sqrt(Math.pow(current.x-x,2)+Math.pow(current.y-y,2)) <= distance) {
+			terrainsFound.push(terrains[i]);
+		};
+	};
+	return terrainsFound;
+};
+
+function drawMoves() {
+	var currentTile = currentSelection.tile;
+	if (currentTile !== null) {
+		if ((currentTile.type > 4 && first) || (currentTile.type < 5 && !first)) {
+			var terrainsFound = findTerrains(currentTile.x,currentTile.y,currentTile.speed);
+			context.strokeStyle = "#04B404";
+			context.lineWidth = 5;
+			for (var i = 0; i<terrainsFound.length; i++) {
+				var currentTerrain = terrainsFound[i];
+				context.strokeRect(currentTerrain.x, currentTerrain.y, 100, 100);
+			};
+		};
+	};
+};
+
+function drawAttacks() {
+	var currentTile = currentSelection.tile;
+	if (currentTile !== null) {
+		if ((currentTile.type > 4 && first) || (currentTile.type < 5 && !first)) {
+			var terrainsFound = findTerrains(currentTile.x,currentTile.y,currentTile.range);
+			context.fillStyle = "#088A85";
+			context.globalAlpha = 0.2;
+			for (var i = 0; i<terrainsFound.length; i++) {
+				var currentTerrain = terrainsFound[i];
+				context.fillRect(currentTerrain.x, currentTerrain.y, 100, 100);
+			};
+		};
+	};
+	context.globalAlpha = 1.0;
+};
 
 function draw() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
-	context.globalAlpha = 1.0
+	context.globalAlpha = 1.0;
 	drawGrass();
 	drawCharacters(menuCharacters);
 	drawCharacters(playCharacters);
-	context.globalAlpha = 1.0
+	context.globalAlpha = 1.0;
 	//drawEnemySelection();
-	drawPastSelection();
+	if (!startingPhase) {
+		drawAttacks();
+		drawMoves();
+	};
+	//drawPastSelection();
 	drawSelection();
+	
 	
 };
 

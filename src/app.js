@@ -367,7 +367,7 @@ function playTurn(data) {
 	} else {
 		//this.emit("alert", {fromServer: "wait, still not done yet"});
 		//this.emit("alert", {fromServer: "You're attacking a guy of type "+selection.nextTile.type+" at "+selection.nextTile.x()+" "+selection.nextTile.y()});
-		if (!selection.pastTile.action(selection.nextTile,possiblyHurt)) {sendIdentification
+		if (!selection.pastTile.action(selection.nextTile,possiblyHurt)) {
 			this.emit("alert", {fromServer: "Invalid move! Sorry about that. Just do something else."});
 			return;
 		}

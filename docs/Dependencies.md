@@ -44,3 +44,8 @@ Cookie:
 
 Cookie module, used for cookie parsing.
 License: The MIT License
+
+JQuery:
+
+DOM manipulation library. Used for the chat feature in the lobby.
+License: The MIT License

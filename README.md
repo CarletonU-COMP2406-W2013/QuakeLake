@@ -21,4 +21,5 @@ Start the server by running:
 
 node app.js
 
-Everything should then work as expected.
+Everything should then work as expected. 
+It's running on Node.js, Express, Socket.IO, MongoDB, bcrypt, cookie, jade, and stylus. JQuery is also used on the client side.

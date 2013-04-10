@@ -42,4 +42,5 @@ License: The MIT License
 
 Cookie:
 
-Cookie module, used for session management.
+Cookie module, used for cookie parsing and serialization.
+License: The MIT License

@@ -30,4 +30,6 @@ It is a cross-browser WebSocket for realtime apps.
 The main server listens for connections, and once they are established, messages are exchanged between the clients and the server to update the state of the chat page (which is global) and the game page (which is restricted to the two clients competing against each other).
 License:MIT License 
 
-//Stylus: Dynamic CSS Library. Not actually used.
+Stylus: 
+
+Dynamic CSS Library. We use the default stylesheets produced by the Express framework.

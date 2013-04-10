@@ -4,7 +4,7 @@ Express:
 
 It is a web application framework for node.js. 
 Here, it is used to run the application.
-License: MIT license 
+License: The MIT license 
 
 MongoDB:
 
@@ -22,14 +22,24 @@ Jade:
 
 Jade is a high perfomances template engine for node.js.
 It is use to create HTML templates.
-License: MIT License
+License: The MIT License
 
 Socket.IO:
 
 It is a cross-browser WebSocket for realtime apps.
 The main server listens for connections, and once they are established, messages are exchanged between the clients and the server to update the state of the chat page (which is global) and the game page (which is restricted to the two clients competing against each other).
-License:MIT License 
+License: The MIT License 
 
 Stylus: 
 
 Dynamic CSS Library. We use the default stylesheets produced by the Express framework.
+License: The MIT License
+
+Connect: 
+
+Middleware module, used for session management.
+License: The MIT License
+
+Cookie:
+
+Cookie module, used for session management.

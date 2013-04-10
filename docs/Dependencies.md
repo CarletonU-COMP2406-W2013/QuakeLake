@@ -42,5 +42,5 @@ License: The MIT License
 
 Cookie:
 
-Cookie module, used for cookie parsing and serialization.
+Cookie module, used for cookie parsing.
 License: The MIT License

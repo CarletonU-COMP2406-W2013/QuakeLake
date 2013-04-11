@@ -17,7 +17,7 @@ HOW TO RUN
 
 Start a mongodb instance.
 
-Install the dependencies in the directory of package.json by running:
+Install the dependencies in the directory with package.json by running:
 `npm install`
 
 Start the server by running:

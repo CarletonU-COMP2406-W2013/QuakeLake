@@ -17,8 +17,10 @@ HOW TO RUN
 
 Start a mongodb instance.
 
-Start the server by running:
+Install the dependencies in the directory of package.json by running:
+`npm install`
 
+Start the server by running:
 `node app.js`
 
 Everything should then work as expected. 

@@ -1,10 +1,15 @@
 Dependencies.md
 
+Node.js
+
+Server side software. Runs the whole thing. Version 10.3 is recommended for our application.
+License: The MIT License
+
 Express:
 
 It is a web application framework for node.js. 
 Here, it is used to run the application.
-License: The MIT license 
+License: The MIT License 
 
 MongoDB:
 

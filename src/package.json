@@ -9,7 +9,7 @@
 		"express": "4.17.1",
 		"jade": "*",
 		"stylus": "*",
-		"socket.io": "0.9.11",
+		"socket.io": "2.5.0",
 		"mongodb": "*",
 		"bcrypt": "*",
 		"connect": "*",
